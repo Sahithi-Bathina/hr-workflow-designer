@@ -2,8 +2,13 @@ import { ReactFlowProvider } from "@xyflow/react";
 import WorkflowCanvas from "../features/workflow/WorkflowCanvas";
 import WorkflowSidebar from "../features/workflow/WorkflowSidebar";
 import WorkflowPanel from "../features/workflow/WorkflowPanel";
+import { useWorkflowStore } from "../store/workflow.store"; // Import the store
 
 function App() {
+  // Pull the simulation state and function from the store
+  const runSimulation = useWorkflowStore((state) => state.runSimulation);
+  const isSimulating = useWorkflowStore((state) => state.isSimulating);
+
   return (
     <div className="flex flex-col h-screen w-screen bg-slate-50 overflow-hidden font-sans">
       {/* Navbar */}
@@ -15,8 +20,16 @@ function App() {
           </h1>
         </div>
         <div className="flex gap-4">
-           <button className="px-5 py-2 bg-indigo-600 text-white rounded-full text-sm hover:bg-indigo-700 transition-all font-bold shadow-lg shadow-indigo-100">
-            Simulate Workflow
+           <button 
+            onClick={runSimulation}
+            disabled={isSimulating}
+            className={`px-5 py-2 rounded-full text-sm font-bold shadow-lg transition-all ${
+              isSimulating 
+                ? 'bg-slate-400 cursor-not-allowed text-white' 
+                : 'bg-indigo-600 text-white hover:bg-indigo-700 shadow-indigo-100'
+            }`}
+          >
+            {isSimulating ? 'Simulating...' : 'Simulate Workflow'}
           </button>
         </div>
       </header>
