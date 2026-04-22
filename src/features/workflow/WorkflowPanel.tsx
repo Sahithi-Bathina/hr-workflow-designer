@@ -1,19 +1,11 @@
 import { useWorkflowStore } from "../../store/workflow.store";
+import { useWorkflowActions } from "../../hooks/workflow/useWorkflowAction";
 
 const WorkflowPanel = () => {
   const { selectedNode, updateNodeData, deleteNode } = useWorkflowStore();
-
-  const exportWorkflow = () => {
-    const { nodes, edges } = useWorkflowStore.getState();
-    const workflowData = {
-      name: "HR_Onboarding_Flow",
-      version: "1.0",
-      timestamp: new Date().toISOString(),
-      structure: { nodes, edges }
-    };
-    console.log("EXPORTED DATA:", workflowData);
-    alert("Check Console for JSON export!");
-  };
+  
+  // Destructuring the logic from our custom hook
+  const { handleExport, handleImport } = useWorkflowActions();
 
   if (!selectedNode) {
     return (
@@ -22,6 +14,16 @@ const WorkflowPanel = () => {
           <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 15l-2 5L9 9l11 4-5 2zm0 0l5 5M7.188 2.239l.777 2.897M5.136 7.965l-2.898-.777M13.95 4.05l-2.122 2.122m-5.657 5.656l-2.12 2.122"/></svg>
         </div>
         Select a node to configure settings.
+        
+        <div className="mt-auto w-full space-y-2">
+           <button onClick={handleExport} className="w-full py-3 bg-slate-900 text-white rounded-xl text-sm font-bold hover:bg-slate-800 transition-all shadow-sm">
+            💾 Export Flow
+          </button>
+          <label className="w-full py-3 bg-indigo-50 text-indigo-600 rounded-xl text-sm font-bold text-center cursor-pointer hover:bg-indigo-100 transition-all block border border-indigo-100">
+            📥 Import Flow
+            <input type="file" accept=".json" className="hidden" onChange={handleImport} />
+          </label>
+        </div>
       </div>
     );
   }
@@ -29,7 +31,7 @@ const WorkflowPanel = () => {
   const nodeData = selectedNode.data as any;
 
   return (
-    <div className="w-80 border-l bg-white flex flex-col shadow-xl z-10">
+    <div className="w-80 border-l bg-white flex flex-col shadow-xl z-10 h-full">
       <div className="p-6 border-b bg-slate-50 flex justify-between items-center">
         <div>
           <h3 className="font-bold text-slate-800">Node Properties</h3>
@@ -65,13 +67,18 @@ const WorkflowPanel = () => {
         </div>
       </div>
 
-      <div className="p-4 border-t bg-slate-50">
+      <div className="p-4 border-t bg-slate-50 space-y-2">
         <button 
-          onClick={exportWorkflow}
-          className="w-full py-3 bg-white border border-slate-200 text-slate-600 rounded-xl text-sm font-bold hover:bg-slate-100 transition-all shadow-sm"
+          onClick={handleExport}
+          className="w-full py-3 bg-slate-900 text-white rounded-xl text-sm font-bold hover:bg-slate-800 transition-all shadow-sm"
         >
-          Export Configuration
+          💾 Export Configuration
         </button>
+
+        <label className="w-full py-3 bg-indigo-50 border border-indigo-100 text-indigo-600 rounded-xl text-sm font-bold text-center cursor-pointer hover:bg-indigo-100 transition-all block">
+          📥 Import Workflow
+          <input type="file" accept=".json" className="hidden" onChange={handleImport} />
+        </label>
       </div>
     </div>
   );
