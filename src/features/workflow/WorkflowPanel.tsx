@@ -33,10 +33,6 @@ const WorkflowPanel = () => {
   return (
     <div className="w-80 border-l bg-white flex flex-col shadow-xl z-10 h-full">
       <div className="p-6 border-b bg-slate-50 flex justify-between items-center">
-        <div>
-          <h3 className="font-bold text-slate-800">Node Properties</h3>
-          <p className="text-[10px] font-mono text-slate-400">{selectedNode.id}</p>
-        </div>
         <button 
           onClick={() => deleteNode(selectedNode.id)}
           className="p-2 text-rose-500 hover:bg-rose-50 rounded-lg transition-colors"
